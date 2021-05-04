@@ -24,9 +24,11 @@ const Nav = styled(motion.nav)`
   width: 100%;
   height: 40px;
   border-bottom: 4px solid black;
+  background-color: white;
   display: flex;
   justify-content: space-between;
   padding: 0 16px;
+  z-index: 10;
   h3 {
     margin: 0;
   }

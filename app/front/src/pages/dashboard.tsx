@@ -1,7 +1,7 @@
+import React from 'react';
 import { withAuth, WithAuthPagePropsType } from 'api/withAuth';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import React, { FC } from 'react';
 import styled from 'styled-components';
 import Button from 'components/Button';
 import { useRouter } from 'next/router';

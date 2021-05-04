@@ -5,6 +5,7 @@ export type ReviewType = {
   content: string;
   employeeId: string;
   ownerId: string;
+  owner: EmployeeType;
 };
 
 export type EmployeeType = {

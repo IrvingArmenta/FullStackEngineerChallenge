@@ -1,20 +1,63 @@
+import React, { useCallback, useRef, useState } from 'react';
 import { withAuth, WithAuthPagePropsType } from 'api/withAuth';
 import { AnimatePresence, motion } from 'framer-motion';
 import { DashboardSection } from 'pages/dashboard';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Button } from 'components';
 import router from 'next/router';
 import { apiRoutes, EmployeeType } from 'api';
 import { useForceUpdate } from 'components/EmployeeCard';
+import styled from 'styled-components';
 
 const delayOperation = (msec: number) =>
   new Promise((resolve) => setTimeout(resolve, msec));
 
+const EmployeeDetailWrap = styled(motion.div)`
+  .reviews-list {
+    margin-top: 16px;
+    margin-bottom: 32px;
+    li {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      padding: 8px;
+      h4 {
+        margin: 0;
+        margin-left: 8px;
+      }
+      &:not(:last-child) {
+        margin-bottom: 8px;
+      }
+      .img {
+        font-size: 0;
+        width: 48px;
+        height: 48px;
+        flex: 0.2;
+      }
+      .content {
+        flex: 1;
+        padding: 0 8px;
+      }
+      .info {
+        display: flex;
+        align-items: center;
+        flex: 0.5;
+        h4 {
+          flex: 1;
+        }
+      }
+    }
+  }
+`;
+
 const EmployeeDetail = (
-  props: WithAuthPagePropsType & { employee: { data: EmployeeType | null } }
+  props: WithAuthPagePropsType & {
+    incoming: {
+      data: { employee: EmployeeType };
+    };
+  }
 ) => {
-  const { session, employee } = props;
+  const { session, incoming } = props;
   const [deleting, setDeleting] = useState(false);
   const cardError = useRef(false);
   const [done, setDone] = useState(false);
@@ -25,7 +68,7 @@ const EmployeeDetail = (
     await delayOperation(2000);
     try {
       const del = await fetch(
-        `http://localhost:9090/employees/${employee.data?.id}`,
+        `http://localhost:9090/employees/${incoming.data?.employee?.id}`,
         {
           method: 'DELETE'
         }
@@ -44,18 +87,21 @@ const EmployeeDetail = (
   }, []);
 
   return (
-    <motion.div layoutId={`$employee-${employee.data?.id}`} layout={true}>
+    <EmployeeDetailWrap
+      layoutId={`$employee-${incoming.data?.employee?.id}`}
+      layout={true}
+    >
       <DashboardSection layout={true} className="dashboard-wrap">
-        {employee && (
+        {incoming.data.employee && (
           <>
-            <h1> {employee.data?.name}</h1>
+            <h1>{incoming.data.employee.name}</h1>
             <div className="profile">
               <div className="pixel-border img">
                 <Image
                   src={
                     cardError.current
                       ? 'http://placehold.jp/250x230.png'
-                      : employee.data?.photoUrl || ''
+                      : incoming.data?.employee?.photoUrl || ''
                   }
                   width={250}
                   height={220}
@@ -67,17 +113,14 @@ const EmployeeDetail = (
               </div>
               <span>
                 <h3>
-                  {'>'} {employee.data?.name}
+                  {'>'} {incoming.data.employee.email}
                 </h3>
-                <h4>
-                  {'>'} {employee.data?.email}
-                </h4>
                 <hr />
                 <p>
-                  {'>'} department: {employee.data?.department}
+                  {'>'} department: {incoming.data.employee.department}
                 </p>
                 <p>
-                  {'>'} Your rating: {employee.data?.rating}
+                  {'>'} Your rating: {incoming.data.employee.rating}
                 </p>
                 <Button onClick={() => router.push('/employees-list')}>
                   Go back to the list
@@ -114,10 +157,30 @@ const EmployeeDetail = (
                 )}
               </span>
             </div>
+            <h3 style={{ marginTop: 16 }}>Reviews</h3>
+            <ul className="reviews-list">
+              {incoming.data.employee.reviews.map((r) => {
+                return (
+                  <motion.li
+                    className="pixel-border"
+                    key={`${r.id}`}
+                    whileHover={{ scale: 0.96 }}
+                  >
+                    <div className="info">
+                      <div className="img pixel-border">
+                        <Image src={r.owner.photoUrl} width={48} height={40} />
+                      </div>
+                      <h4>{r.owner.name}</h4>
+                    </div>
+                    <div className="content">{r.content}</div>
+                  </motion.li>
+                );
+              })}
+            </ul>
           </>
         )}
       </DashboardSection>
-    </motion.div>
+    </EmployeeDetailWrap>
   );
 };
 
@@ -128,7 +191,7 @@ export const getServerSideProps = withAuth(async (ctx) => {
 
   return {
     props: {
-      employee: empJson
+      incoming: empJson
     }
   };
 });

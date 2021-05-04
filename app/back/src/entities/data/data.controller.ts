@@ -5,7 +5,6 @@ import {
   IBaseModel,
   Model
 } from '@fastify-resty/core';
-import faker from 'faker';
 import { FastifyRequest } from 'fastify';
 import { getRepository } from 'typeorm';
 import { apiVersionPrefix } from '../../constants';
@@ -85,7 +84,12 @@ export default class DataController {
     const { delay } = request.query;
     const { id } = request.params;
 
-    const employee = await getRepository(EmployeeEntity).findOne({ id });
+    const employee = await getRepository(EmployeeEntity)
+      .createQueryBuilder('employee')
+      .innerJoinAndSelect('employee.reviews', 'reviews')
+      .innerJoinAndSelect('reviews.owner', 'owner')
+      .where('employee.id = :emplId', { emplId: id })
+      .getOne();
 
     if (delay) {
       await delayOperation(delay);
@@ -95,7 +99,7 @@ export default class DataController {
       return { data: 'not found!' };
     }
 
-    return { data: employee };
+    return { data: { employee } };
   }
 
   @DELETE('/employees/:id')

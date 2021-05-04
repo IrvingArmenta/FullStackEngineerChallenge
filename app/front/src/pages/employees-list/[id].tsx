@@ -13,6 +13,7 @@ const delayOperation = (msec: number) =>
   new Promise((resolve) => setTimeout(resolve, msec));
 
 const EmployeeDetailWrap = styled(motion.div)`
+  width: 100%;
   .reviews-list {
     margin-top: 16px;
     margin-bottom: 32px;
@@ -50,6 +51,10 @@ const EmployeeDetailWrap = styled(motion.div)`
   }
 `;
 
+/**
+ * detailed page of one employee
+ * shows the information and also the reviews related to him/her
+ */
 const EmployeeDetail = (
   props: WithAuthPagePropsType & {
     incoming: {
@@ -88,7 +93,7 @@ const EmployeeDetail = (
 
   return (
     <EmployeeDetailWrap
-      layoutId={`$employee-${incoming.data?.employee?.id}`}
+      layoutId={`$employee-${incoming.data.employee.id}`}
       layout={true}
     >
       <DashboardSection layout={true} className="dashboard-wrap">

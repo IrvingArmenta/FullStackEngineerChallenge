@@ -16,6 +16,10 @@ const ListWrap = styled(motion.div)`
   }
 `;
 
+/**
+ * Page containing the list of all the employees in the DB
+ * it uses swr for caching and pagination functionality
+ */
 function EmployeesList(props: WithAuthPagePropsType) {
   const [perPageV, setPerPageV] = useState(8);
   const currentPage = useGlobalStore(useCallback((s) => s.currentPage, []));

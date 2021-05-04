@@ -20,6 +20,10 @@ export const DashboardSection = styled(motion.section)`
   }
 `;
 
+/**
+ * Page to see the info of the current logged in user.
+ * if there is no session it will be redirected to login `/`
+ */
 function Dashboard(props: WithAuthPagePropsType) {
   const router = useRouter();
   const { session } = props;
@@ -30,7 +34,7 @@ function Dashboard(props: WithAuthPagePropsType) {
       layoutId="appSection"
       className="dashboard-wrap"
     >
-      <h1>Dashboard</h1>
+      <h1>Your Dashboard</h1>
       <div className="profile">
         <div className="pixel-border img">
           <Image src={session.photoUrl} width={250} height={220} />

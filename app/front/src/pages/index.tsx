@@ -53,7 +53,9 @@ const LoginForm = styled(motion.div)`
   }
 `;
 
-// login page
+/**
+ * Login page to enter as an Admin or as Regular user
+ */
 function Index(props: WithAuthPagePropsType) {
   const router = useRouter();
 

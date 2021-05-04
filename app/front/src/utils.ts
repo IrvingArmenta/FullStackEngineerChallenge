@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 export const isProduction = process.env.NODE_ENV === 'production';
 
-const isBrowser = () => typeof window !== 'undefined';
+export const isBrowser = () => typeof window !== 'undefined';
 
 export let debugConsole: any = () => {
   return false;

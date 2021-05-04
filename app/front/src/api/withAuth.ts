@@ -4,6 +4,8 @@ import nookies from 'nookies';
 import { getServerSideProps } from 'pages';
 import { EmployeeType } from './ss-typings';
 
+// Implementation for authentication using the nextjs server side props;
+
 export type EmployeeNoPasswordType = Omit<EmployeeType, 'password'>;
 
 export enum APP_COOKIES {

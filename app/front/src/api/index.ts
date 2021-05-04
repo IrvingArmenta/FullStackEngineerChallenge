@@ -28,6 +28,10 @@ export const apiRoutes = {
   reviews: `${assetsApiEndpoint}/reviews`
 };
 
+/**
+ * Static data for the "login" function
+ * of course this is not secure and it's not meant for real apps
+ */
 export const staticEmployees = {
   admin: {
     department: 'Admin',

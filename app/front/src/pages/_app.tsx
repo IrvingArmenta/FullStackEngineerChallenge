@@ -41,6 +41,10 @@ const Nav = styled(motion.nav)`
   }
 `;
 
+/**
+ * Main app function that handles the animation with an <AnimeSharedLayout /> wrapper for all of it
+ * and also handles the session information that passes to all other pages
+ */
 function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const [sessData, setSess] = useState<EmployeeNoPasswordType | null>(null);
@@ -61,8 +65,6 @@ function App({ Component, pageProps }: AppProps) {
     if (session) {
       const e = JSON.parse(session);
       setSess(e);
-    } else {
-      setSess(null);
     }
   }, [session]);
 
@@ -89,7 +91,7 @@ function App({ Component, pageProps }: AppProps) {
               <h3>Human Resource</h3>
             </section>
             <section className="right-section">
-              {sessData?.name}
+              {session && JSON.parse(session || `{ name: '' }`).name}
               <Button onClick={() => handleLogout()}>Logout</Button>
             </section>
           </Nav>
